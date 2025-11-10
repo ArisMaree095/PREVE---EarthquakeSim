@@ -101,8 +101,7 @@ public class SistemaMovimiento : MonoBehaviour
         DragadoEnSuelo();
         MantenerEnSuelo();
 
-       
-        //VerRaycast();
+    
     }
 
     
@@ -115,9 +114,17 @@ public class SistemaMovimiento : MonoBehaviour
 
     private void ManejadorDeEstado()
     {
+        // revisa la capsula
         var capsule = colisionadorJugador as CapsuleCollider;
         if (capsule == null)
             return;
+
+        // valores del raycast
+        float distancia = distanciaRaycastAgachado;
+        Vector3 origen = transform.position;
+        origen.y -= 1;
+
+        Debug.DrawRay(origen, Vector3.up * distancia, Color.red);
 
         // Si el botón de agachado está presionado, siempre agachado
         if (agachado.action.IsPressed())
@@ -125,19 +132,19 @@ public class SistemaMovimiento : MonoBehaviour
             estadoMovimiento = EstadoMovimiento.agachado;
             return;
         }
+        
 
-        float distancia = distanciaRaycastAgachado;
-        Vector3 origen = transform.position + Vector3.up * (capsule.height / 2f);
-
-        // El raycast se ejecuta siempre, pero solo afecta si el personaje está agachado
-        if (Physics.Raycast(origen, Vector3.up, distancia, capaSuelo))
+        // El raycast se ejecuta al no agacharse, pero se dibuja siempre
+        if (Physics.Raycast(origen, Vector3.up, distancia))
         {
+           
             if (estadoMovimiento == EstadoMovimiento.agachado)
             {
-                Debug.Log("tocando techo");
                 estadoMovimiento = EstadoMovimiento.agachado;
+                return;
             }
         }
+
         else
         {
             if (estadoMovimiento == EstadoMovimiento.agachado)
@@ -146,11 +153,12 @@ public class SistemaMovimiento : MonoBehaviour
                 return;
             }
         }
-        Debug.DrawRay(origen, Vector3.up * distancia, Color.red);
+        
         // Si no está agachado y no se presiona el botón, puede caminar
         estadoMovimiento = EstadoMovimiento.caminando;
     }
 
+    
 
     void DetectarSuelo()
     {
@@ -253,8 +261,6 @@ public class SistemaMovimiento : MonoBehaviour
     }
 
 
-
-
     void ControlDeVelocidad()
     {
         Vector3 velocidadHorizontal = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
@@ -266,47 +272,6 @@ public class SistemaMovimiento : MonoBehaviour
     }
 
 
-    void VerRaycast()
-    {
-        // Visualización del raycast hacia arriba (agachado) usando Debug.DrawRay
-        var capsule = colisionadorJugador as CapsuleCollider;
-        if (capsule != null && estadoMovimiento == EstadoMovimiento.agachado)
-        {
-            Vector3 origenArriba = transform.position + Vector3.up * (capsule.height / 2f);
-            Vector3 direccionArriba = Vector3.up;
-            float distanciaArriba = distanciaRaycastAgachado;
-
-            bool hayObstaculo = Physics.Raycast(origenArriba, direccionArriba, distanciaArriba);
-            Color colorRay = hayObstaculo ? Color.green : Color.red;
-            Debug.DrawRay(origenArriba, direccionArriba * distanciaArriba, colorRay);
-        }
-    }
-
-
-    /*private void OnDrawGizmos()
-    {
-        // Raycast hacia abajo (suelo)
-        Gizmos.color = Color.green;
-        Vector3 origenSuelo = transform.position;
-        Vector3 destinoSuelo = origenSuelo + Vector3.down * alturaJugador;
-        Gizmos.DrawLine(origenSuelo, destinoSuelo);
-        Gizmos.DrawSphere(destinoSuelo, 0.05f);
-
-        // Raycast hacia arriba (agachado)
-        var capsule = colisionadorJugador as CapsuleCollider;
-        if (capsule != null)
-        {
-            Gizmos.color = Color.red;
-            // Antes:
-            // float distanciaArriba = (alturaColliderInicial - alturaAgachado) / 2f + capsule.height / 2f + 0.05f;
-
-            // Después:
-            float distanciaArriba = distanciaRaycastAgachado;
-            Vector3 origenArriba = transform.position + Vector3.up * (capsule.height / 2f);
-            Vector3 destinoArriba = origenArriba + Vector3.up * distanciaArriba;
-            Gizmos.DrawLine(origenArriba, destinoArriba);
-            Gizmos.DrawSphere(destinoArriba, capsule.radius);
-        }
-    }*/
+   
 }
 
