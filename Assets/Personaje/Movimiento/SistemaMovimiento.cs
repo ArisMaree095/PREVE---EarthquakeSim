@@ -48,10 +48,14 @@ public class SistemaMovimiento : MonoBehaviour
     public EstadoMovimiento estadoMovimiento;
     private float alturaColliderInicial;
     private Vector3 centroColliderInicial;
+    private float agachadoLerp = 0f;
+    public float duracionAgachado = 0.3f; // Puedes ajustar este valor en el inspector
 
     
 
     public enum EstadoMovimiento { caminando, agachado }
+
+
     private void OnEnable()
     {
         contenedor.Enable();
@@ -98,7 +102,7 @@ public class SistemaMovimiento : MonoBehaviour
         MantenerEnSuelo();
 
        
-        VerRaycast();
+        //VerRaycast();
     }
 
     
@@ -122,26 +126,27 @@ public class SistemaMovimiento : MonoBehaviour
             return;
         }
 
-        // Solo realiza el raycast si está agachado
-        if (estadoMovimiento == EstadoMovimiento.agachado)
-        {
-            float distancia = distanciaRaycastAgachado;
-            Vector3 origen = transform.position + Vector3.up * (capsule.height / 2f);
+        float distancia = distanciaRaycastAgachado;
+        Vector3 origen = transform.position + Vector3.up * (capsule.height / 2f);
 
-            // Si el raycast detecta un obstáculo, no hacer nada (mantener agachado)
-            if (Physics.Raycast(origen, Vector3.up, distancia))
+        // El raycast se ejecuta siempre, pero solo afecta si el personaje está agachado
+        if (Physics.Raycast(origen, Vector3.up, distancia, capaSuelo))
+        {
+            if (estadoMovimiento == EstadoMovimiento.agachado)
             {
-                // No hacer nada, permanece agachado
-                return;
+                Debug.Log("tocando techo");
+                estadoMovimiento = EstadoMovimiento.agachado;
             }
-            else
+        }
+        else
+        {
+            if (estadoMovimiento == EstadoMovimiento.agachado)
             {
-                // Si no detecta obstáculo, cambiar a modo caminar
                 estadoMovimiento = EstadoMovimiento.caminando;
                 return;
             }
         }
-
+        Debug.DrawRay(origen, Vector3.up * distancia, Color.red);
         // Si no está agachado y no se presiona el botón, puede caminar
         estadoMovimiento = EstadoMovimiento.caminando;
     }
@@ -212,19 +217,39 @@ public class SistemaMovimiento : MonoBehaviour
         if (capsule == null)
             return;
 
+        // Determina los valores objetivo
+        float alturaObjetivo;
+        Vector3 centroObjetivo;
+
         if (estadoMovimiento == EstadoMovimiento.agachado)
         {
-            velocidad = velocidadAgachado;
-            capsule.height = alturaAgachado;
+            alturaObjetivo = alturaAgachado;
             float diferencia = (alturaColliderInicial - alturaAgachado) / 2f;
-            capsule.center = new Vector3(centroColliderInicial.x, centroColliderInicial.y - diferencia, centroColliderInicial.z);
+            centroObjetivo = new Vector3(centroColliderInicial.x, centroColliderInicial.y - diferencia, centroColliderInicial.z);
+
+            // Avanza la interpolación
+            agachadoLerp += Time.deltaTime / duracionAgachado;
         }
         else // Estado caminando
         {
-            velocidad = 5f;
-            capsule.height = alturaColliderInicial;
-            capsule.center = centroColliderInicial;
+            alturaObjetivo = alturaColliderInicial;
+            centroObjetivo = centroColliderInicial;
+
+            // Retrocede la interpolación
+            agachadoLerp -= Time.deltaTime / duracionAgachado;
         }
+
+        // Limita el progreso entre 0 y 1
+        agachadoLerp = Mathf.Clamp01(agachadoLerp);
+
+        // Interpola altura y centro
+        capsule.height = Mathf.Lerp(alturaColliderInicial, alturaAgachado, agachadoLerp);
+        capsule.center = Vector3.Lerp(centroColliderInicial,
+            new Vector3(centroColliderInicial.x, centroColliderInicial.y - ((alturaColliderInicial - alturaAgachado) / 2f), centroColliderInicial.z),
+            agachadoLerp);
+
+        // Interpola velocidad
+        velocidad = Mathf.Lerp(5f, velocidadAgachado, agachadoLerp);
     }
 
 
@@ -258,7 +283,7 @@ public class SistemaMovimiento : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         // Raycast hacia abajo (suelo)
         Gizmos.color = Color.green;
@@ -282,6 +307,6 @@ public class SistemaMovimiento : MonoBehaviour
             Gizmos.DrawLine(origenArriba, destinoArriba);
             Gizmos.DrawSphere(destinoArriba, capsule.radius);
         }
-    }
+    }*/
 }
 
