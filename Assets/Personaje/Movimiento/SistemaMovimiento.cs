@@ -51,7 +51,7 @@ public class SistemaMovimiento : MonoBehaviour
     private float agachadoLerp = 0f;
     public float duracionAgachado = 0.3f; // Puedes ajustar este valor en el inspector
 
-    
+    public Transform PosicionCamara;
 
     public enum EstadoMovimiento { caminando, agachado }
 
