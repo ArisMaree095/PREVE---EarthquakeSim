@@ -2,24 +2,24 @@ using UnityEngine;
 
 public class activahumo : MonoBehaviour
 {
-    
-    public ParticleSystem humo; // Arrastra tu sistema de partículas aquí en el Inspector
+    public GameObject objeto; 
+
+    private bool activado = false;
+
+    private void Start()
+    {
+        if (objeto != null)
+            objeto.SetActive(false); 
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player_prueba"))
+        if (!activado && other.CompareTag("Player_prueba"))
         {
-            if (!humo.isPlaying)
-                humo.Play();
-        }
-    }
+            if (objeto != null)
+                objeto.SetActive(true);
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player_prueba"))
-        {
-            if (humo.isPlaying)
-                humo.Stop();
+            activado = true; 
         }
     }
 }
