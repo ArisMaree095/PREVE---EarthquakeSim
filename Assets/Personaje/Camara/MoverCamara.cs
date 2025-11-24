@@ -1,17 +1,26 @@
+using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class MoverCamara : MonoBehaviour
 {
-    public Transform PosicionCamara;
-    public SistemaMovimiento SistemaMovimiento;
+    public XROrigin xrOrigin;
+    public SistemaMovimiento sistemaMovimiento;
+
+    private float alturaOriginal;
+    private float alturaObjetivo;
 
     private void Start()
     {
-      Cursor.lockState = CursorLockMode.Locked;
-      Cursor.visible = false;
+        if (xrOrigin != null)
+        {
+            alturaOriginal = xrOrigin.CameraYOffset;
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         EstadoDeCamara();
@@ -19,16 +28,20 @@ public class MoverCamara : MonoBehaviour
 
     void EstadoDeCamara()
     {
-        if (SistemaMovimiento.estadoMovimiento == SistemaMovimiento.EstadoMovimiento.agachado)
+        if (xrOrigin == null || sistemaMovimiento == null) return;
+
+        // Determinar altura objetivo
+        if (sistemaMovimiento.estadoMovimiento == SistemaMovimiento.EstadoMovimiento.agachado)
         {
-            Vector3 targetPosition = PosicionCamara.position + new Vector3(0, -SistemaMovimiento.alturaAgachado, 0);
-            float newY = Mathf.Lerp(transform.position.y, targetPosition.y, Time.deltaTime * 10);
-            transform.position = new Vector3(PosicionCamara.position.x, newY, PosicionCamara.position.z);
+            alturaObjetivo = alturaOriginal - sistemaMovimiento.alturaAgachado;
         }
         else
         {
-            float newY = Mathf.Lerp(transform.position.y, PosicionCamara.position.y, Time.deltaTime * 10);
-            transform.position = new Vector3(PosicionCamara.position.x, newY, PosicionCamara.position.z);
+            alturaObjetivo = alturaOriginal;
         }
+
+        // Aplicar interpolación suave
+        float nuevaAltura = Mathf.Lerp(xrOrigin.CameraYOffset, alturaObjetivo, Time.deltaTime * 10f);
+        xrOrigin.CameraYOffset = nuevaAltura;
     }
 }
