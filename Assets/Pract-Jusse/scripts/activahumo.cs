@@ -20,6 +20,8 @@ public class activahumo : MonoBehaviour
                 objeto.SetActive(true);
 
             activado = true; 
+
+
         }
     }
 }
