@@ -3,32 +3,28 @@ using System.Collections;
 
 public class ScreenShake : MonoBehaviour
 {
-    public float duration = 0.5f; // Duration of the shake
-    public AnimationCurve curva;
     public Transform CamaraPosition;
-
-    // Eliminamos shouldShake ya que lo controlará el evento
 
     void Start()
     {
-        // Suscribirse al evento del terremoto
+        // Suscribirse al evento con parámetros
         TerremotoManager.Terremoto += OnTerremotoOcurrido;
     }
 
-    void OnTerremotoOcurrido()
+    void OnTerremotoOcurrido(AnimationCurve curva, float duracion)
     {
-        // Iniciar el screen shake cuando ocurra el terremoto
-        StartCoroutine(Shaking());
+        // Usar la curva y duración recibidas del trigger
+        StartCoroutine(Shaking(curva, duracion));
     }
 
-    IEnumerator Shaking()
+    IEnumerator Shaking(AnimationCurve curva, float duracion)
     {
         Vector3 originalPos = CamaraPosition.localPosition;
 
         float elapsed = 0.0f;
-        while (elapsed < duration)
+        while (elapsed < duracion)
         {
-            float fuerza = curva.Evaluate(elapsed / duration);
+            float fuerza = curva.Evaluate(elapsed / duracion);
             float x = Random.Range(-1f, 1f) * fuerza;
             float y = Random.Range(-1f, 1f) * fuerza;
             CamaraPosition.localPosition = new Vector3(x, y, originalPos.z);
@@ -41,7 +37,6 @@ public class ScreenShake : MonoBehaviour
 
     void OnDestroy()
     {
-        // Importante: Desuscribirse al destruir el objeto
         TerremotoManager.Terremoto -= OnTerremotoOcurrido;
     }
 }

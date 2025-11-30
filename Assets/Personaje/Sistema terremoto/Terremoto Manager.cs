@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class TerremotoManager : MonoBehaviour
 {
-    public static event System.Action Terremoto;
+    public static event System.Action<AnimationCurve, float> Terremoto;
 
-    public float intensidad;
-    public float tiempoDuracion;
-
-    public static void EmitirTerremoto()
+    public static void EmitirTerremoto(AnimationCurve curva, float duracion)
     {
-        Terremoto?.Invoke();
+        Terremoto?.Invoke(curva, duracion);
     }
 
-    
+
 }
