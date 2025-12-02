@@ -1967,8 +1967,8 @@
                 },
                 {
                     "name": "",
-                    "id": "89a673f4-814e-439d-bb2b-6b650633cded",
-                    "path": "<OculusTouchController>{LeftHand}/secondaryButton",
+                    "id": "49ca43bb-34c8-4c64-a7e7-7a514728e4a1",
+                    "path": "<OculusTouchController>{RightHand}/secondaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
