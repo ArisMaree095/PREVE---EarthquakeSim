@@ -29,8 +29,9 @@ public static class SimulationDataManager
     {
         DataContainer dataContainer = LoadDataContainer(); //Load the data first
         dataContainer.resultList.Add(new SimResultData(time)); //Add new data to list
-        string json = JsonUtility.ToJson(dataContainer, true); //Convert to JSON
-        File.WriteAllText(Path.Combine(Application.persistentDataPath, saveFileName), json);
+        
+       /* string json = JsonUtility.ToJson(dataContainer, true); //Convert to JSON
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, saveFileName), json);*/
 
         //Keep only the last 10 results
         if (dataContainer.resultList.Count > 10)

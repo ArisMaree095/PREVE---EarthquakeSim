@@ -52,4 +52,10 @@ if (isTimerRunning)
 
         SimulationDataManager.SaveNewResult(elapsedTime);
     }
+
+    public void EndSimulation()
+    {
+        TimerCount.instance.SaveTimer();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
 }

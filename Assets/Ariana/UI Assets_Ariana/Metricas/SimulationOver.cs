@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class SimulationOver : MonoBehaviour
+public class SimulationOver
 {
     public TMP_Text timeDisplayText;
 
