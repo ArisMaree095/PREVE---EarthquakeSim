@@ -15,6 +15,7 @@ public class SimResultData : MonoBehaviour
     }
 }
 
+[System.Serializable]
 public class DataContainer //For easier JSON conversion
 {
     public List <SimResultData> resultList = new List<SimResultData>();
@@ -44,6 +45,17 @@ public static class SimulationDataManager
     public static List<SimResultData> GetResults()
     {
         return LoadDataContainer().resultList;
+    }
+
+    public static SimResultData GetMostRecentResult()
+    {
+        List<SimResultData> results = GetResults();
+        if (results != null && results.Count > 0)
+        {
+            return results[results.Count - 1];
+        }
+
+        return null;
     }
 
     private static DataContainer LoadDataContainer()

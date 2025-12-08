@@ -4,78 +4,73 @@ using UnityEngine.SceneManagement;
 
 public class Lobby_UI : MonoBehaviour
 {
+    //Title Screen
     public GameObject PlayPanel;
     public Button AccederButton;
 
+    //Selection Screen
     public GameObject SelectionPanel;
     public Button IniciarButton;
     public Button AjustesButton;
     public Button FinalizarButton;
 
-    public GameObject SettingsPanel;
+    //Ajustes Screen
+    public GameObject AjustesPanel;
     public Button MetricasButton;
     public Button SistemaButton;
-    public Button SettingsRegresarButton;
+    public Button AjustesRegresarButton;
 
+    //Settings or Preferences
     public GameObject PreferencesPanel;
     public Slider VolumeSlider;
     public Slider BrightnessSlider;
     public Toggle TremorToggle;
     public Button PrefRegresarButton;
-    public Button PrefAceptarButton;
-
-    public GameObject MetricsListPanel;
-    public Button Sim1Button;
-    public Button Sim2Button;
-    public Button MetricsListRegresarButton;
-
-    public GameObject MetricsDetailPanel;
-    public Button MetricsDetailRegresarButton;
-
-    public GameObject ExitPanel;
-    public Button ExitRegresarButton;
-    public Button ExitAceptarButton;
 
     private float currentVolume = 1.0f;
     private float currentBrightness = 1.0f;
+    
+    //Metrics List Screen
+    public GameObject MetricsListPanel;
+    public Button MetricsListRegresarButton;
 
-    void Start()
+    //Exit Screen and Confirmation Panel
+    public GameObject ExitPanel;
+    public Button ExitRegresarButton;
+    public Button ExitAceptarButton;
+   
+    private void Start()
     {
         ShowPanel(PlayPanel);
 
         AccederButton.onClick.AddListener(() => ShowPanel(SelectionPanel));
 
         IniciarButton.onClick.AddListener(OnIniciarClicked);
-        AjustesButton.onClick.AddListener(() => ShowPanel(SettingsPanel));
+        AjustesButton.onClick.AddListener(() => ShowPanel(AjustesPanel));
         FinalizarButton.onClick.AddListener(() => ShowPanel(ExitPanel));
 
         MetricasButton.onClick.AddListener(() => ShowPanel(MetricsListPanel));
         SistemaButton.onClick.AddListener(() => ShowPanel(PreferencesPanel));
-        SettingsRegresarButton.onClick.AddListener(() => ShowPanel(SelectionPanel));
+        AjustesRegresarButton.onClick.AddListener(() => ShowPanel(PlayPanel));
 
         if (VolumeSlider) VolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         if (BrightnessSlider) BrightnessSlider.onValueChanged.AddListener(OnBrightnessChanged);
-        PrefRegresarButton.onClick.AddListener(() => ShowPanel(SettingsPanel));
-        PrefAceptarButton.onClick.AddListener(OnPreferencesSaved);
+        PrefRegresarButton.onClick.AddListener(() => ShowPanel(AjustesPanel));
+        PrefRegresarButton.onClick.AddListener(OnPreferencesSaved);
 
-        if (Sim1Button) Sim1Button.onClick.AddListener(OnSimulationSelected);
-        if (Sim2Button) Sim2Button.onClick.AddListener(OnSimulationSelected);
-        MetricsListRegresarButton.onClick.AddListener(() => ShowPanel(SettingsPanel));
-
-        MetricsDetailRegresarButton.onClick.AddListener(() => ShowPanel(MetricsListPanel));
+        MetricsListRegresarButton.onClick.AddListener(() => ShowPanel(AjustesPanel));
 
         ExitRegresarButton.onClick.AddListener(() => ShowPanel(SelectionPanel));
-        ExitAceptarButton.onClick.AddListener(OnExitConfirmClicked);
+        ExitAceptarButton.onClick.AddListener(OnFinalizarClicked);
     }
 
-    private void ShowPanel(GameObject panelToShow)
+    public void ShowPanel(GameObject panelToShow)
     {
         PlayPanel.SetActive(false);
         SelectionPanel.SetActive(false);
-        SettingsPanel.SetActive(false);
+        AjustesPanel.SetActive(false);
         PreferencesPanel.SetActive(false);
         MetricsListPanel.SetActive(false);
-        MetricsDetailPanel.SetActive(false);
         ExitPanel.SetActive(false);
 
         if (panelToShow != null)
@@ -84,43 +79,34 @@ public class Lobby_UI : MonoBehaviour
         }
     }
 
-    void OnIniciarClicked()
+    public void OnIniciarClicked()
     {
-        SceneTransitionManager.singleton.GoToSceneAsync(1); //Call the scene transition manager to load the simulation scene
+        SceneTransitionManager.singleton.GoToSceneAsync(1);
     }
 
-
-    //SETTINGS
-    void OnVolumeChanged(float value)
+    public void OnVolumeChanged(float value)
     {
         AudioListener.volume = value;
         currentVolume = value;
     }
 
-    void OnBrightnessChanged(float value)
+    public void OnBrightnessChanged(float value)
     {
         currentBrightness = value;
         RenderSettings.ambientIntensity = value;
     }
 
-    void OnPreferencesSaved()
+    public void OnPreferencesSaved()
     {
         PlayerPrefs.SetFloat("Volume", currentVolume);
         PlayerPrefs.SetFloat("Brightness", currentBrightness);
         PlayerPrefs.SetInt("Tremor", TremorToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();
 
-        ShowPanel(SettingsPanel);
+        ShowPanel(AjustesPanel);
     }
 
-
-    //METRICS 
-    void OnSimulationSelected()
-    {
-        ShowPanel(MetricsDetailPanel);
-    }
-
-    void OnExitConfirmClicked()
+    public void OnFinalizarClicked()
     {
         Application.Quit();
     }

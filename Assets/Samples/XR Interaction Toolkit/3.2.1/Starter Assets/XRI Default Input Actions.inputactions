@@ -2576,7 +2576,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "448b396b-0885-4543-ac5a-8b3405da6791",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -2631,7 +2631,7 @@
                 {
                     "name": "",
                     "id": "e87fa299-8441-4620-89dd-0564c7d552e2",
-                    "path": "<Mouse>/position",
+                    "path": "<XRController>/{Point}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -2641,19 +2641,8 @@
                 },
                 {
                     "name": "",
-                    "id": "445a013e-9c17-48a2-9856-067e4826df03",
-                    "path": "<Pen>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Point",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "05c1e38e-79dd-41cb-95d5-74f42e65d92f",
-                    "path": "<Touchscreen>/position",
+                    "id": "055de71c-69e5-4ec2-885c-8f0fa2e3c940",
+                    "path": "<XRSimulatedController>/{Point}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -2664,18 +2653,7 @@
                 {
                     "name": "",
                     "id": "57909bb4-1088-4975-9227-ecc87a305257",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2740386d-d4b6-4342-903c-d9390783f04a",
-                    "path": "<Pen>/tip",
+                    "path": "<XRController>/{Primary2DAxisClick}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -2708,7 +2686,7 @@
                 {
                     "name": "",
                     "id": "54eb7da2-546a-4d75-bfcc-ae38be303a59",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<XRController>{RightHand}/{Secondary2DAxisClick}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -2982,8 +2960,8 @@
                 },
                 {
                     "name": "",
-                    "id": "9f2a7c29-a588-4b6a-a966-955eb408c526",
-                    "path": "*/{Submit}",
+                    "id": "acd3227a-b402-4f46-9028-db48820bac80",
+                    "path": "<XRController>/{Submit}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -2994,7 +2972,7 @@
                 {
                     "name": "",
                     "id": "67f51768-1493-4444-b118-82d398a16fdd",
-                    "path": "*/{Cancel}",
+                    "path": "<XRController>/{Cancel}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -3004,12 +2982,12 @@
                 },
                 {
                     "name": "",
-                    "id": "198e6869-709e-448d-96d4-27186c9d56e6",
-                    "path": "<Touchscreen>/Press",
+                    "id": "5ef5f0c7-e9b9-45e9-945b-70738d841830",
+                    "path": "<XRSimulatedController>/{Cancel}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Click",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
