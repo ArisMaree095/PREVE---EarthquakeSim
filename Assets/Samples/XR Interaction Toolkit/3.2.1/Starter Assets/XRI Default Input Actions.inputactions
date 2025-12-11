@@ -2983,7 +2983,7 @@
                 {
                     "name": "",
                     "id": "9f2a7c29-a588-4b6a-a966-955eb408c526",
-                    "path": "*/{Submit}",
+                    "path": "<XRController>/{Submit}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -2994,7 +2994,7 @@
                 {
                     "name": "",
                     "id": "67f51768-1493-4444-b118-82d398a16fdd",
-                    "path": "*/{Cancel}",
+                    "path": "<XRController>/{Cancel}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

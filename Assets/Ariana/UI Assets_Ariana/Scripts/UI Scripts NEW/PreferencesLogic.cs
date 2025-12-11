@@ -5,14 +5,12 @@ using UnityEngine.SceneManagement;
 public class PreferencesLogic : MonoBehaviour
 {
     public Slider VolumeSlider;
-    public Slider BrightnessSlider;
     public Toggle TremorToggle;
     public Button SaveButton; // The "Aceptar" button
 
     void Start()
     {
         if (SaveButton) SaveButton.onClick.AddListener(SaveSettings);
-
     }
 
     public void UpdateVolume(float value)
@@ -23,7 +21,6 @@ public class PreferencesLogic : MonoBehaviour
     void SaveSettings()
     {
         PlayerPrefs.SetFloat("Volume", VolumeSlider.value);
-        PlayerPrefs.SetFloat("Brightness", BrightnessSlider.value);
         PlayerPrefs.SetInt("Tremor", TremorToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();
         Debug.Log("Settings Saved!");
