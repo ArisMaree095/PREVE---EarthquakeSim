@@ -1,113 +1,43 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Lobby_UI : MonoBehaviour
 {
-    //Title Screen
-    public GameObject PlayPanel;
-    public Button AccederButton;
+    public GameObject resultsPanel;      // The Panel containing the texts
+    public TextMeshProUGUI timerText;    // Text for "Time: 00:00"
+    public TextMeshProUGUI statusText;   // Text for "Passed/Failed"
 
-    //Selection Screen
-    public GameObject SelectionPanel;
-    public Button IniciarButton;
-    public Button AjustesButton;
-    public Button FinalizarButton;
-
-    //Ajustes Screen
-    public GameObject AjustesPanel;
-    public Button MetricasButton;
-    public Button SistemaButton;
-    public Button AjustesRegresarButton;
-
-    //Settings or Preferences
-    public GameObject PreferencesPanel;
-    public Slider VolumeSlider;
-    public Slider BrightnessSlider;
-    public Toggle TremorToggle;
-    public Button PrefRegresarButton;
-
-    private float currentVolume = 1.0f;
-    private float currentBrightness = 1.0f;
-    
-    //Metrics List Screen
-    public GameObject MetricsListPanel;
-    public Button MetricsListRegresarButton;
-
-    //Exit Screen and Confirmation Panel
-    public GameObject ExitPanel;
-    public Button ExitRegresarButton;
-    public Button ExitAceptarButton;
-   
     private void Start()
     {
-        ShowPanel(PlayPanel);
-
-        AccederButton.onClick.AddListener(() => ShowPanel(SelectionPanel));
-
-        IniciarButton.onClick.AddListener(OnIniciarClicked);
-        AjustesButton.onClick.AddListener(() => ShowPanel(AjustesPanel));
-        FinalizarButton.onClick.AddListener(() => ShowPanel(ExitPanel));
-
-        MetricasButton.onClick.AddListener(() => ShowPanel(MetricsListPanel));
-        SistemaButton.onClick.AddListener(() => ShowPanel(PreferencesPanel));
-        AjustesRegresarButton.onClick.AddListener(() => ShowPanel(PlayPanel));
-
-        if (VolumeSlider) VolumeSlider.onValueChanged.AddListener(OnVolumeChanged);
-        if (BrightnessSlider) BrightnessSlider.onValueChanged.AddListener(OnBrightnessChanged);
-        PrefRegresarButton.onClick.AddListener(() => ShowPanel(AjustesPanel));
-        PrefRegresarButton.onClick.AddListener(OnPreferencesSaved);
-
-        MetricsListRegresarButton.onClick.AddListener(() => ShowPanel(AjustesPanel));
-
-        ExitRegresarButton.onClick.AddListener(() => ShowPanel(SelectionPanel));
-        ExitAceptarButton.onClick.AddListener(OnFinalizarClicked);
-    }
-
-    public void ShowPanel(GameObject panelToShow)
-    {
-        PlayPanel.SetActive(false);
-        SelectionPanel.SetActive(false);
-        AjustesPanel.SetActive(false);
-        PreferencesPanel.SetActive(false);
-        MetricsListPanel.SetActive(false);
-        ExitPanel.SetActive(false);
-
-        if (panelToShow != null)
+        // 1. If no manager or no data (first launch), hide results
+        if (DataManager.Instance == null || !DataManager.Instance.HasData)
         {
-            panelToShow.SetActive(true);
+            if (resultsPanel != null) resultsPanel.SetActive(false);
+            return;
         }
-    }
 
-    public void OnIniciarClicked()
-    {
-        SceneTransitionManager.singleton.GoToSceneAsync(1);
-    }
+        // 2. We have data, so show the panel
+        if (resultsPanel != null) resultsPanel.SetActive(true);
 
-    public void OnVolumeChanged(float value)
-    {
-        AudioListener.volume = value;
-        currentVolume = value;
-    }
+        // 3. Format and Display Time
+        float t = DataManager.Instance.TotalTimeSpent;
+        string minutes = Mathf.FloorToInt(t / 60).ToString("00");
+        string seconds = Mathf.FloorToInt(t % 60).ToString("00");
 
-    public void OnBrightnessChanged(float value)
-    {
-        currentBrightness = value;
-        RenderSettings.ambientIntensity = value;
-    }
+        if (timerText != null)
+            timerText.text = $"Time: {minutes}:{seconds}";
 
-    public void OnPreferencesSaved()
-    {
-        PlayerPrefs.SetFloat("Volume", currentVolume);
-        PlayerPrefs.SetFloat("Brightness", currentBrightness);
-        PlayerPrefs.SetInt("Tremor", TremorToggle.isOn ? 1 : 0);
-        PlayerPrefs.Save();
+        // 4. Format and Display Status
+        bool success = DataManager.Instance.DidDropCorrectly;
 
-        ShowPanel(AjustesPanel);
-    }
-
-    public void OnFinalizarClicked()
-    {
-        Application.Quit();
+        if (statusText != null)
+        {
+            if (success)
+                statusText.text = "Reaction: <color=green>SAFE (Dropped)</color>";
+            else
+                statusText.text = "Reaction: <color=red>UNSAFE (Stood Up)</color>";
+        }
     }
 }

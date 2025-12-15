@@ -20,9 +20,9 @@ public class ResultsDisplay : MonoBehaviour
             if (resultsPanel != null) resultsPanel.SetActive(true);
 
             // 1. Format Time (Minutes:Seconds)
-            float t = DataManager.Instance.SaveData;
-            string minutes = Mathf.FloorToInt(t / 60).ToString("00");
-            string seconds = Mathf.FloorToInt(t % 60).ToString("00");
+            float time = DataManager.Instance.TotalTimeSpent;
+            string minutes = Mathf.FloorToInt(time / 60).ToString("00");
+            string seconds = Mathf.FloorToInt(time % 60).ToString("00");
             timeText.text = $"Time in Sim: {minutes}:{seconds}";
 
             // 2. Format Drop Status

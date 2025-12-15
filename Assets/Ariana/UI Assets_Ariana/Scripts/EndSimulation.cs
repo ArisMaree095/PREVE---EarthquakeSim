@@ -2,15 +2,27 @@ using UnityEngine;
 
 public class EndSimulation : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Recorder recorder;             // Reference to data recorder
+    public SimulationUI uiManager; 
+    private void OnTriggerEnter(Collider other)
     {
-        
-    }
+        // Check if the player hit the trigger
+        if (other.CompareTag("Player"))
+        {
+            
+            if (recorder != null)
+            {
+                recorder.EndLevel();
+            }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+            if (uiManager != null)
+            {
+                uiManager.ShowEndScreen();
+            }
+            else
+            {
+                Debug.LogError("UI Manager is not assigned in the Inspector!");
+            }
+        }
     }
 }

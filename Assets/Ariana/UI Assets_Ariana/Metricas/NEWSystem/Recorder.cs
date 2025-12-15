@@ -61,7 +61,7 @@ public class Recorder : MonoBehaviour
         // Send data to the Persistent Singleton
         if (DataManager.Instance != null)
         {
-            DataManager.Instance.SaveRunData(_timer, _playerDroppedSuccess);
+            DataManager.Instance.SaveData(_timer, _playerDroppedSuccess);
         }
         else
         {
@@ -70,5 +70,11 @@ public class Recorder : MonoBehaviour
 
         // Return to Lobby
         SceneManager.LoadScene(lobbySceneName);
+    }
+
+    public void EndLevel()
+    {
+        // Put any logic here to stop data collection or save files
+        Debug.Log("Recording stopped.");
     }
 }
